@@ -10,41 +10,62 @@ import java.util.function.Consumer;
 public class Building {
 
     private final Age age;
-
     private final Couleur couleur;
+    private final List<Resource> coutRessources;
 
-    private final List<Resource> cout;
+    public int getCoutPiecesOr() {
+        return coutPiecesOr;
+    }
 
+    public void setCoutPiecesOr(int coutPiecesOr) {
+        this.coutPiecesOr = coutPiecesOr;
+    }
+
+    private int coutPiecesOr;
     private final List<Resource> production;
-
-    private final Etat etat;
-
+    private final List<Resource> productionChoisie;
     private final int boucliersMilitaires;
-
     private final int nombrePointsVictoire;
-
     private final SymboleScience symboleScience;
-
     private final Optional<Consumer<Joueur>> onConstructMethod;
 
-    public List<Resource> getProduction(){
+    public List<Resource> getProduction() {
         return production;
     }
+
+    private final Optional<Building> parent;
 
     public Building(BuildingBuilder buildingBuilder) {
         this.age = buildingBuilder.age;
         this.couleur = buildingBuilder.couleur;
-        this.cout = buildingBuilder.cout;
-        this.production = buildingBuilder.production;
-        this.etat = buildingBuilder.etat;
+        this.coutRessources = Collections.unmodifiableList(buildingBuilder.coutResources);
+        this.coutPiecesOr = buildingBuilder.coutPiecesOr;
+        this.production = Collections.unmodifiableList(buildingBuilder.production);
+        this.productionChoisie = Collections.unmodifiableList(buildingBuilder.productionChoisie);
         this.boucliersMilitaires = buildingBuilder.boucliersMilitaires;
         this.nombrePointsVictoire = buildingBuilder.nombrePointsVictoire;
         this.symboleScience = buildingBuilder.symboleScience;
         this.onConstructMethod = Optional.ofNullable(buildingBuilder.onConstrucMethod);
+        this.parent = Optional.ofNullable(buildingBuilder.parent);
     }
 
-    public void construit(Joueur joueur){
+    public void construit(Joueur joueur) {
         onConstructMethod.ifPresent(c -> c.accept(joueur));
+    }
+
+    public void construireParChainage(Joueur joueur) {
+
+        if (parent.isPresent()) {
+            if (joueur.getCartesConstruites().contains(parent.get())) {
+                onConstructMethod.ifPresent(c -> c.accept(joueur));
+            } else {
+                throw new RuntimeException("le joueur ne possède pas la carte requise pour le chainage");
+            }
+        } else {
+            throw new RuntimeException("pas de chainage possible pour cette carte");
+        }
+
+
     }
 
     public static BuildingBuilder builder(Age age, Couleur couleur) {
@@ -53,6 +74,7 @@ public class Building {
 
     public static class BuildingBuilder {
 
+
         private BuildingBuilder(Age age, Couleur couleur) {
             this.age = age;
             this.couleur = couleur;
@@ -60,14 +82,12 @@ public class Building {
 
         private final Age age;
         private final Couleur couleur;
-        private List<Resource> cout;
+        private List<Resource> coutResources = Collections.emptyList();
+        private int coutPiecesOr = 0;
+        private Building parent = null;
 
         private List<Resource> production = Collections.emptyList();
-
-        private Joueur proprietaire;
-
-        private Etat etat;
-
+        public List<Resource> productionChoisie = Collections.emptyList();
 
         private int boucliersMilitaires;
 
@@ -78,8 +98,18 @@ public class Building {
         private Consumer<Joueur> onConstrucMethod;
 
 
-        public BuildingBuilder setCout(Resource... cout) {
-            this.cout = Arrays.asList(cout);
+        public BuildingBuilder withCoutResources(Resource... coutResources) {
+            this.coutResources = Arrays.asList(coutResources);
+            return this;
+        }
+
+        public BuildingBuilder withCoutChainage(Building parent) {
+            this.parent = parent;
+            return this;
+        }
+
+        public BuildingBuilder withCoutPiecesOr(int coutPiecesOr) {
+            this.coutPiecesOr = coutPiecesOr;
             return this;
         }
 
@@ -88,11 +118,11 @@ public class Building {
             return this;
         }
 
-
-        public BuildingBuilder setEtat(Etat etat) {
-            this.etat = etat;
+        public BuildingBuilder withProductionChoisie(Resource... productionChoisie) {
+            this.productionChoisie = Arrays.asList(productionChoisie);
             return this;
         }
+
 
         public BuildingBuilder setBoucliersMilitaires(int boucliersMilitaires) {
             this.boucliersMilitaires = boucliersMilitaires;
@@ -120,7 +150,7 @@ public class Building {
     }
 
 
-    public enum  Couleur {
-        MARRON,GRIS,BLEU,JAUNE,ROUGE,VERT,VIOLET
+    public enum Couleur {
+        MARRON, GRIS, BLEU, JAUNE, ROUGE, VERT, VIOLET
     }
 }

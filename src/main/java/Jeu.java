@@ -11,17 +11,17 @@ public class Jeu {
 
         List<Building> defausse = new ArrayList<>();
 
-        Joueur jp = new Joueur("JP");
+        Joueur jp = Joueur.builder().build();
 
         jp.displayNombreDePièces();
 
-        jp.construit(Deck.taverne);
+        jp.construire(Deck.taverne);
 
         jp.displayNombreDePièces();
 
         System.out.println("res : " + jp.getProduction() );
 
-        jp.construit(Deck.filonDor);
+        jp.construire(Deck.filonDor);
         System.out.println("res : " + jp.getProduction() );
         //jp.getProduction().forEach(p -> System.out.println("res : " + p ));
 

@@ -11,10 +11,7 @@ public enum Resource {
     // Manufacturées
     Verre,
     Tissu,
-    Papirus,
-
-    // Argent
-    PièceOr
+    Papirus
 
 
 

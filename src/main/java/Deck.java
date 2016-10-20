@@ -7,6 +7,11 @@ public interface Deck {
             .withProduction(Resource.Minerai)
             .build();
 
+    Building timberYard = Building.builder(Age.I, Building.Couleur.MARRON)
+            .withProductionChoisie(Resource.Pierre, Resource.Bois)
+            .withCoutPiecesOr(1)
+            .build();
+
     Building verrerie = Building.builder(Age.I, Building.Couleur.GRIS)
             .withProduction(Resource.Verre)
             .build();
@@ -19,15 +24,27 @@ public interface Deck {
             .withPointsVictoire(3)
             .build();
 
-
     Building tourDeGarde = Building.builder(Age.I, Building.Couleur.ROUGE)
-            .setCout(Resource.Minerai)
+            .withCoutResources(Resource.Minerai)
             .setBoucliersMilitaires(1)
             .build();
 
     Building apothiquaire = Building.builder(Age.I, Building.Couleur.VERT)
-            .setCout(Resource.Tissu)
+            .withCoutResources(Resource.Tissu)
             .setSymboleScience(SymboleScience.Compas)
+            .build();
+
+
+    Building scriptotium = Building.builder(Age.I, Building.Couleur.VERT)
+            .setSymboleScience(SymboleScience.PierreDeRosette)
+            .withCoutResources(Resource.Papirus)
+            .build();
+
+    //Age 2
+    Building hotelDeVille = Building.builder(Age.II, Building.Couleur.BLEU)
+            .withCoutResources(Resource.Brique, Resource.Brique, Resource.Tissu)
+            .withCoutChainage(scriptotium)
+            .withPointsVictoire(4)
             .build();
 
 }
