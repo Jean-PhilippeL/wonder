@@ -1,3 +1,5 @@
+package domaine;
+
 /**
  * Created by jean_letard on 19/10/2016.
  */
@@ -40,7 +42,7 @@ public interface Deck {
             .withCoutResources(Resource.Papirus)
             .build();
 
-    //Age 2
+    //domaine.Age 2
     Building hotelDeVille = Building.builder(Age.II, Building.Couleur.BLEU)
             .withCoutResources(Resource.Brique, Resource.Brique, Resource.Tissu)
             .withCoutChainage(scriptotium)

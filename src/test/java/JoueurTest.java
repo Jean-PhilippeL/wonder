@@ -1,3 +1,5 @@
+import domaine.Building;
+import domaine.Deck;
 import org.assertj.core.api.Assertions;
 import org.junit.Rule;
 import org.junit.Test;

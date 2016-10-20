@@ -1,3 +1,5 @@
+package domaine;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -12,28 +14,30 @@ public class Building {
     private final Age age;
     private final Couleur couleur;
     private final List<Resource> coutRessources;
-
-    public int getCoutPiecesOr() {
-        return coutPiecesOr;
-    }
-
-    public void setCoutPiecesOr(int coutPiecesOr) {
-        this.coutPiecesOr = coutPiecesOr;
-    }
-
-    private int coutPiecesOr;
+    private final int coutPiecesOr;
     private final List<Resource> production;
     private final List<Resource> productionChoisie;
     private final int boucliersMilitaires;
     private final int nombrePointsVictoire;
     private final SymboleScience symboleScience;
     private final Optional<Consumer<Joueur>> onConstructMethod;
+    private final Optional<Building> parent;
 
     public List<Resource> getProduction() {
         return production;
     }
 
-    private final Optional<Building> parent;
+    public List<Resource> getProductionChoisie() {
+        return productionChoisie;
+    }
+
+    public int getCoutPiecesOr() {
+        return coutPiecesOr;
+    }
+    public Couleur getCouleur() {
+        return couleur;
+    }
+
 
     public Building(BuildingBuilder buildingBuilder) {
         this.age = buildingBuilder.age;

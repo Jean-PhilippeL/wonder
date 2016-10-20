@@ -1,6 +1,9 @@
+package domaine;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by jean_letard on 18/10/2016.
@@ -12,7 +15,7 @@ public class Joueur {
     private final String name;
     private final List<Building> cartesEnMain;
     private final List<Building> cartesConstruites;
-    private int nombreDePièces = NB_PIECES_INITIAL;
+    private int nombreDePièces;
 
     public static JoueurBuilder builder() {
         return new JoueurBuilder();
@@ -54,7 +57,7 @@ public class Joueur {
     }
 
 
-    public void construire(Building building) {
+    public void construire(Building building, Map<Building, List<Resource>> ressourcesMap) {
         if (cartesEnMain.remove(building)) {
             final int coutConstruction = building.getCoutPiecesOr();
             if (coutConstruction > nombreDePièces) {
@@ -67,6 +70,7 @@ public class Joueur {
             throw new RuntimeException("can't construct this building");
         }
     }
+
 
     public void construireParChainage(Building building) {
         if (cartesEnMain.remove(building)) {
@@ -88,14 +92,6 @@ public class Joueur {
 
     public void construireMerveille(Building building) {
 
-    }
-
-    public List<Resource> getProduction() {
-        return cartesConstruites.stream().map(b -> b.getProduction()).reduce((resources, resources2) -> {
-            List<Resource> list = new ArrayList<>(resources);
-            list.addAll(resources2);
-            return list;
-        }).get();
     }
 
     public static class JoueurBuilder {
@@ -133,8 +129,6 @@ public class Joueur {
             this.nombreDePièces = nombreDePièces;
             return this;
         }
-
-
     }
 
 }

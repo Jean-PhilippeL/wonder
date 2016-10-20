@@ -1,3 +1,6 @@
+import domaine.Building;
+import domaine.Deck;
+
 import java.util.ArrayList;
 import java.util.List;
 
