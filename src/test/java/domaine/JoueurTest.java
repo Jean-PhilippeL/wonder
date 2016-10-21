@@ -1,5 +1,5 @@
-import domaine.Building;
-import domaine.Deck;
+package domaine;
+
 import org.assertj.core.api.Assertions;
 import org.junit.Rule;
 import org.junit.Test;
@@ -147,7 +147,7 @@ public class JoueurTest {
         List<Building> defausse = new ArrayList<>();
 
         //When
-        joueur.defausse(Deck.filonDor, defausse);
+        joueur.defausser(Deck.filonDor, defausse);
 
         //Then
         Assertions.assertThat(joueur.getCartesEnMain()).isEmpty();

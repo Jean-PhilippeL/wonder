@@ -1,5 +1,6 @@
 import domaine.Building;
 import domaine.Deck;
+import domaine.Joueur;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,10 +23,10 @@ public class Jeu {
 
         jp.displayNombreDePièces();
 
-        System.out.println("res : " + jp.getProduction() );
+        //System.out.println("res : " + jp.getProduction() );
 
         jp.construire(Deck.filonDor);
-        System.out.println("res : " + jp.getProduction() );
+        //System.out.println("res : " + jp.getProduction() );
         //jp.getProduction().forEach(p -> System.out.println("res : " + p ));
 
 

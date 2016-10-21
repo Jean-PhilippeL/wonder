@@ -34,6 +34,11 @@ public class Building {
     public int getCoutPiecesOr() {
         return coutPiecesOr;
     }
+
+    public List<Resource> getCoutRessources() {
+        return Collections.unmodifiableList(coutRessources);
+    }
+
     public Couleur getCouleur() {
         return couleur;
     }
@@ -57,12 +62,9 @@ public class Building {
         onConstructMethod.ifPresent(c -> c.accept(joueur));
     }
 
-    public void construireParChainage(Joueur joueur) {
-
+    public void isDisponibleParChainage(Joueur joueur) {
         if (parent.isPresent()) {
-            if (joueur.getCartesConstruites().contains(parent.get())) {
-                onConstructMethod.ifPresent(c -> c.accept(joueur));
-            } else {
+            if (!joueur.getCartesConstruites().contains(parent.get())) {
                 throw new RuntimeException("le joueur ne possède pas la carte requise pour le chainage");
             }
         } else {

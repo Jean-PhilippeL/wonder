@@ -3,7 +3,6 @@ package domaine;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by jean_letard on 18/10/2016.
@@ -57,11 +56,11 @@ public class Joueur {
     }
 
 
-    public void construire(Building building, Map<Building, List<Resource>> ressourcesMap) {
-        if (cartesEnMain.remove(building)) {
+    public void construire(Building building) {
+        if (cartesEnMain.remove(building)) { //Todo : à vérifier en amont
             final int coutConstruction = building.getCoutPiecesOr();
             if (coutConstruction > nombreDePièces) {
-                throw new RuntimeException("Pas assez d'argent pour construire");
+                throw new RuntimeException("Pas assez d'argent pour construire"); //Déja vérifié avant
             }
             nombreDePièces -= coutConstruction;
             building.construit(this);
@@ -74,19 +73,19 @@ public class Joueur {
 
     public void construireParChainage(Building building) {
         if (cartesEnMain.remove(building)) {
-            building.construireParChainage(this);
+            building.isDisponibleParChainage(this); //Déja vérifié avant
             cartesConstruites.add(building);
         } else {
             throw new RuntimeException("can't construct this building");
         }
     }
 
-    public void defausse(Building building, List<Building> defausse) {
+    public void defausser(Building building, List<Building> defausse) {
         if (cartesEnMain.remove(building)) {
             ajouterPieces(3);
             defausse.add(building);
         } else {
-            throw new RuntimeException("can't defausse this building");
+            throw new RuntimeException("can't defausser this building");
         }
     }
 
