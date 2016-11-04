@@ -1,5 +1,7 @@
 package domaine;
 
+import service.Jeu;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -10,6 +12,10 @@ import java.util.function.Consumer;
  * Created by jean_letard on 18/10/2016.
  */
 public class Building {
+
+
+    private final String name;
+
 
     private final Age age;
     private final Couleur couleur;
@@ -23,6 +29,12 @@ public class Building {
     private final Optional<Consumer<Joueur>> onConstructMethod;
     private final Optional<Building> parent;
 
+    public String getName() {
+        return name;
+    }
+    public Age getAge() {
+        return age;
+    }
     public List<Resource> getProduction() {
         return production;
     }
@@ -44,7 +56,8 @@ public class Building {
     }
 
 
-    public Building(BuildingBuilder buildingBuilder) {
+    private Building(BuildingBuilder buildingBuilder) {
+        this.name = buildingBuilder.name;
         this.age = buildingBuilder.age;
         this.couleur = buildingBuilder.couleur;
         this.coutRessources = Collections.unmodifiableList(buildingBuilder.coutResources);
@@ -56,6 +69,8 @@ public class Building {
         this.symboleScience = buildingBuilder.symboleScience;
         this.onConstructMethod = Optional.ofNullable(buildingBuilder.onConstrucMethod);
         this.parent = Optional.ofNullable(buildingBuilder.parent);
+
+        Jeu.allCards.add(this);
     }
 
     public void construit(Joueur joueur) {
@@ -74,20 +89,22 @@ public class Building {
 
     }
 
-    public static BuildingBuilder builder(Age age, Couleur couleur) {
-        return new BuildingBuilder(age, couleur);
+    public static BuildingBuilder builder(String name, Age age, Couleur couleur) {
+        return new BuildingBuilder(name, age, couleur);
     }
 
     public static class BuildingBuilder {
 
 
-        private BuildingBuilder(Age age, Couleur couleur) {
+        private BuildingBuilder(String name, Age age, Couleur couleur) {
+            this.name = name;
             this.age = age;
             this.couleur = couleur;
         }
 
         private final Age age;
         private final Couleur couleur;
+        private final String name;
         private List<Resource> coutResources = Collections.emptyList();
         private int coutPiecesOr = 0;
         private Building parent = null;

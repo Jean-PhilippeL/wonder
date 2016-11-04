@@ -162,20 +162,8 @@ public class JoueurTest {
     }
 
 
-
-
-    @Test
-    public void defausse() throws Exception {
-
-    }
-
     @Test
     public void construireMerveille() throws Exception {
-
-    }
-
-    @Test
-    public void getProduction() throws Exception {
 
     }
 
