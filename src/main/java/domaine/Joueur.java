@@ -16,6 +16,9 @@ public class Joueur {
     private final List<Building> cartesConstruites;
     private int nombreDePièces;
 
+    private Joueur voisinGauche;
+    private Joueur voisinDroite;
+
     public static JoueurBuilder builder() {
         return new JoueurBuilder();
     }
@@ -91,6 +94,19 @@ public class Joueur {
 
     public void construireMerveille(Building building) {
 
+    }
+
+    public Joueur getVoisinGauche() {
+        return voisinGauche;
+    }
+
+    public void setVoisinGauche(Joueur voisinGauche) {
+        this.voisinGauche = voisinGauche;
+        voisinGauche.voisinDroite = this;
+    }
+
+    public Joueur getVoisinDroite() {
+        return voisinDroite;
     }
 
     public static class JoueurBuilder {
