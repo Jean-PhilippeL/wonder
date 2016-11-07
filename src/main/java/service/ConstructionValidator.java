@@ -22,6 +22,7 @@ public class ConstructionValidator {
 
 
     //TODO liste d'ordres à retourner (montant des pieces d'or à incrémenter, cartes a déplacer)
+    //TODO : vérifier que les voisins sont les bons !
     //Note : ou alors on ne fait que la verif, les transactions aura lieu plus tard...
     public void acheter(Building building, Structure ressourceJoueur, Structure ressourceVoisinGauche,  Structure ressourceVoisinDroit){
 
