@@ -7,6 +7,7 @@ import domaine.Resource;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 /**
@@ -14,31 +15,44 @@ import java.util.stream.Collectors;
  */
 public class ConstructionValidator {
 
-
     public static class Structure {
         Joueur joueur;
         Map<Building, List<Resource>> ressourcesMap;
     }
 
-
-    //TODO liste d'ordres à retourner (montant des pieces d'or à incrémenter, cartes a déplacer)
-    //TODO : vérifier que les voisins sont les bons !
     //Note : ou alors on ne fait que la verif, les transactions aura lieu plus tard...
-    public void acheter(Building building, Structure ressourceJoueur, Structure ressourceVoisinGauche,  Structure ressourceVoisinDroit){
+    public void validerAchat(Building building, Structure ressourceJoueur, Optional<Structure> ressourceVoisinGauche, Optional<Structure> ressourceVoisinDroit){
 
         //Verif que les resources sont bien existantes
         possede(ressourceJoueur.joueur, ressourceJoueur.ressourcesMap);
-        voisinPossede(ressourceVoisinGauche.joueur, ressourceVoisinGauche.ressourcesMap);
-        voisinPossede(ressourceVoisinDroit.joueur, ressourceVoisinDroit.ressourcesMap);
+
+        //Vérif que l'on achète bien à ses voisins directs et que ces derniers ont assez de ressources
+        ressourceVoisinGauche.ifPresent(resource -> {
+                if(resource.joueur != ressourceJoueur.joueur.getVoisinGauche()){
+                    throw new RuntimeException("On ne peut acheter qu'a ses voisins directs");
+                }
+
+                voisinPossede(resource.joueur, resource.ressourcesMap);
+        });
+
+        ressourceVoisinDroit.ifPresent(resource -> {
+            if(resource.joueur != ressourceJoueur.joueur.getVoisinDroite()){
+                throw new RuntimeException("On ne peut acheter qu'a ses voisins directs");
+            }
+            voisinPossede(resource.joueur, resource.ressourcesMap);
+        });
 
         //Verif que le joueur a assez d'argent pour payer les ressources à ses voisins
-        long coutVoisins = coutResources(ressourceVoisinGauche)  + coutResources(ressourceVoisinDroit);
+        final long[] coutVoisins = {0};
 
-        if(ressourceJoueur.joueur.getNombreDePièces() < coutVoisins){
+        ressourceVoisinGauche.ifPresent(resource -> coutVoisins[0] +=coutResources(resource));
+        ressourceVoisinDroit.ifPresent(resource -> coutVoisins[0] +=coutResources(resource));
+
+        if(ressourceJoueur.joueur.getNombreDePièces() < coutVoisins[0]){
             throw new RuntimeException("pas assez d'argent pour acheter les ressources au voisin");
         }
 
-        if(ressourceJoueur.joueur.getNombreDePièces() < coutVoisins + building.getCoutPiecesOr()){
+        if(ressourceJoueur.joueur.getNombreDePièces() < coutVoisins[0] + building.getCoutPiecesOr()){
             throw new RuntimeException("pas assez d'argent pour acheter le batiment");
         }
 
@@ -46,9 +60,8 @@ public class ConstructionValidator {
 
         final List<Resource> allRessources = new ArrayList<>();
         allRessources.addAll(collecterRessources(ressourceJoueur));
-        allRessources.addAll(collecterRessources(ressourceVoisinGauche) );
-        allRessources.addAll(collecterRessources(ressourceVoisinDroit) );
-
+        ressourceVoisinGauche.ifPresent(resource -> allRessources.addAll(collecterRessources(resource)));
+        ressourceVoisinDroit.ifPresent(resource -> allRessources.addAll(collecterRessources(resource)));
 
         for(Resource ressource : Resource.values()){
             if(countByType(building.getCoutRessources(), ressource) > countByType(allRessources, ressource)){
@@ -65,14 +78,14 @@ public class ConstructionValidator {
                 .collect(Collectors.toList());
     }
 
-    public long coutResources(Structure structure){
+    private long coutResources(Structure structure){
         return structure.ressourcesMap.values().stream().
                 flatMap(List::stream)
-                .count() * 2; //Utilisation du commerce
+                .count() * 2; //TODO : Utilisation du commerce
     }
 
 
-    public void voisinPossede(Joueur joueur, Map<Building, List<Resource>> ressourcesMap){
+    private void voisinPossede(Joueur joueur, Map<Building, List<Resource>> ressourcesMap){
         if (ressourcesMap.keySet().stream().anyMatch(b -> b.getCouleur()!= Building.Couleur.MARRON || b.getCouleur()!= Building.Couleur.GRIS )){
             throw new RuntimeException("seules les ressources des cartes marrons et grises sont achetables");
         }
@@ -80,7 +93,7 @@ public class ConstructionValidator {
     }
 
     //Valide si le joueur à le droit d'utiliser légitimement les ressources
-    public void possede(Joueur joueur, Map<Building, List<Resource>> ressourcesMap) {
+    private void possede(Joueur joueur, Map<Building, List<Resource>> ressourcesMap) {
 
         if (!joueur.getCartesConstruites().containsAll(ressourcesMap.keySet())) {
             throw new RuntimeException("le joueur ne possède pas toutes les cartes");
@@ -114,10 +127,6 @@ public class ConstructionValidator {
             }
         }
     }
-
-
-
-
 
     private long countByType(List<Resource> resources, Resource resource){
         return resources.stream().filter(r -> r==resource).count();
