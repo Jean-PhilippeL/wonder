@@ -18,13 +18,13 @@ import static service.Jeu.allPlayers;
  */
 public class GameService {
 
-    public void initialiserPlaces(List<Joueur> joueurs){
+    public void initialiserPlaces(List<Joueur> joueurs) {
         Collections.shuffle(joueurs);
 
         Iterables.getFirst(joueurs, null).setVoisinGauche(Iterables.getLast(joueurs));
 
-        for(Joueur joueur : joueurs.subList(1, joueurs.size()) ){
-            joueur.setVoisinGauche(joueurs.get(joueurs.indexOf(joueur)-1));
+        for (Joueur joueur : joueurs.subList(1, joueurs.size())) {
+            joueur.setVoisinGauche(joueurs.get(joueurs.indexOf(joueur) - 1));
         }
     }
 
@@ -38,9 +38,27 @@ public class GameService {
         final List<Building> cartesEnJeu = cartesDeAge.subList(0, nbCartesParJoueur * nombreJoueurs);
 
         int i = 0;
-        for(List<Building> cards : Lists.partition(cartesEnJeu, nbCartesParJoueur)){
+        for (List<Building> cards : Lists.partition(cartesEnJeu, nbCartesParJoueur)) {
             Joueur joueur = allPlayers.get(i++);
             cards.forEach(c -> joueur.ajouterCarteEnMain(c));
         }
     }
+
+    public void resoudreLesConflits(Age age, List<Joueur> joueurs) {
+        joueurs.forEach(joueur -> {
+            resoudreLesConflits(age, joueur, joueur.getVoisinGauche());
+            resoudreLesConflits(age, joueur, joueur.getVoisinDroite());
+        });
+
+    }
+
+    private void resoudreLesConflits(Age age, Joueur joueur, Joueur voisin) {
+        final int nbBoucliers = joueur.getNombreDeBoucliers();
+        if (nbBoucliers < voisin.getNombreDeBoucliers()) {
+            joueur.ajouterJetonMilitaire(age.nbPointDefaiteMilitaire);
+        } else if (nbBoucliers > voisin.getNombreDeBoucliers()) {
+            joueur.ajouterJetonMilitaire(age.nbPointVictoireMilitaire);
+        }
+    }
+
 }

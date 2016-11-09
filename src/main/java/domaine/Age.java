@@ -8,9 +8,9 @@ public enum Age {
     II(SensRotation.DROITE,3),
     III(SensRotation.GAUCHE,5);
 
-    final SensRotation sensRotation;
-    final int nbPointDefaiteMilitaire = -1;
-    final int nbPointVictoireMilitaire;
+    public final SensRotation sensRotation;
+    public final int nbPointDefaiteMilitaire = -1;
+    public final int nbPointVictoireMilitaire;
 
     Age(SensRotation sensRotation, int nbPointVictoireMilitaire) {
        this.sensRotation = sensRotation;

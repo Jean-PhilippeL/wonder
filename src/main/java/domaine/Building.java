@@ -23,6 +23,8 @@ public class Building {
     private final int coutPiecesOr;
     private final List<Resource> production;
     private final List<Resource> productionChoisie;
+
+
     private final int boucliersMilitaires;
     private final int nombrePointsVictoire;
     private final SymboleScience symboleScience;
@@ -41,6 +43,10 @@ public class Building {
 
     public List<Resource> getProductionChoisie() {
         return productionChoisie;
+    }
+
+    public int getBoucliersMilitaires() {
+        return boucliersMilitaires;
     }
 
     public int getCoutPiecesOr() {

@@ -14,6 +14,7 @@ public class Joueur {
     private final String name;
     private final List<Building> cartesEnMain;
     private final List<Building> cartesConstruites;
+    private final List<Integer> jetonsMilitaires;
     private int nombreDePièces;
 
     private Joueur voisinGauche;
@@ -32,10 +33,21 @@ public class Joueur {
         return Collections.unmodifiableList(cartesConstruites);
     }
 
+    public List<Integer> getJetonsMilitaires() {
+        return Collections.unmodifiableList(jetonsMilitaires);
+    }
+
+    public int getScoreMilitaire() {
+        return jetonsMilitaires.stream().reduce((j1,j2) ->j1+j2).orElse(0);
+    }
+
     public void ajouterCarteEnMain(Building building) {
         cartesEnMain.add(building);
     }
 
+    public void ajouterJetonMilitaire(Integer jeton){
+        jetonsMilitaires.add(jeton);
+    }
 
     public void displayNombreDePièces() {
         System.out.println("nb pièces : " + nombreDePièces);
@@ -43,6 +55,10 @@ public class Joueur {
 
     public int getNombreDePièces() {
         return nombreDePièces;
+    }
+
+    public int getNombreDeBoucliers() {
+        return cartesConstruites.stream().map(c -> c.getBoucliersMilitaires()).reduce((b1,b2) -> b1+b2).orElse(0);
     }
 
 
@@ -55,12 +71,13 @@ public class Joueur {
         this.name = builder.name;
         this.cartesEnMain = new ArrayList<>(builder.cartesEnMain);
         this.cartesConstruites = new ArrayList<>(builder.cartesConstruites);
+        this.jetonsMilitaires = new ArrayList<>(builder.jetonsMilitaires);
         this.nombreDePièces = builder.nombreDePièces;
     }
 
 
     public void construire(Building building) {
-        if (cartesEnMain.remove(building)) { //Todo : à vérifier en amont
+        //if (cartesEnMain.remove(building)) { //Todo : à vérifier en amont
             final int coutConstruction = building.getCoutPiecesOr();
             if (coutConstruction > nombreDePièces) {
                 throw new RuntimeException("Pas assez d'argent pour construire"); //Déja vérifié avant
@@ -68,9 +85,9 @@ public class Joueur {
             nombreDePièces -= coutConstruction;
             building.construit(this);
             cartesConstruites.add(building);
-        } else {
-            throw new RuntimeException("can't construct this building");
-        }
+        //} else {
+          //  throw new RuntimeException("can't construct this building");
+        //}
     }
 
 
@@ -114,6 +131,7 @@ public class Joueur {
         private String name;
         private List<Building> cartesEnMain = Collections.emptyList();
         private List<Building> cartesConstruites = Collections.emptyList();
+        private List<Integer> jetonsMilitaires = Collections.emptyList();
         private int nombreDePièces = NB_PIECES_INITIAL;
 
         private JoueurBuilder() {
@@ -137,6 +155,11 @@ public class Joueur {
 
         public JoueurBuilder setCartesConstruites(List<Building> cartesConstruites) {
             this.cartesConstruites = cartesConstruites;
+            return this;
+        }
+
+        public JoueurBuilder withJetonsMilitaires(List<Integer> jetonsMilitaires) {
+            this.jetonsMilitaires = jetonsMilitaires;
             return this;
         }
 

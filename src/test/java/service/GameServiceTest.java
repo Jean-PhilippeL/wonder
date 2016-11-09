@@ -2,6 +2,7 @@ package service;
 
 import domaine.Age;
 import domaine.Building;
+import domaine.Deck;
 import domaine.Joueur;
 import org.junit.Before;
 import org.junit.Test;
@@ -24,14 +25,14 @@ public class GameServiceTest {
 
     @Before
     public void setup() {
-        final Joueur joueur1 = Joueur.builder().build();
-        final Joueur joueur2 = Joueur.builder().build();
+        joueur1 = Joueur.builder().build();
+        joueur2 = Joueur.builder().build();
 
-        final List<Joueur> joueurs = Arrays.asList(joueur1, joueur2);
+       joueurs = Arrays.asList(joueur1, joueur2);
     }
 
     @Test
-    public void initialiserPlacesTest() throws Exception {
+    public void initialiserPlacesTest()  {
         //Given
 
         //When
@@ -58,13 +59,14 @@ public class GameServiceTest {
     }
 
     @Test
-    public void distribuerCartesTest() throws Exception {
+    public void distribuerCartesTest()   {
         //Given
 
         //When
         gameService.distribuerCartes(Age.I, joueurs);
         assertThat(joueur1.getCartesEnMain()).isNotEmpty();
         final int nbCartes = joueur1.getCartesEnMain().size();
+        assertThat(nbCartes).isGreaterThan(0);
 
         final Set<Building> allCards = new HashSet<>();
 
@@ -74,5 +76,24 @@ public class GameServiceTest {
         }
 
         assertThat(allCards).hasSize(nbCartes * joueurs.size());
+    }
+
+
+
+    @Test
+    public void resoudreLesConflitsTest(){
+        //Given
+        joueur1.construire(Deck.tourDeGarde);
+        joueur1.setVoisinGauche(joueur2);
+        joueur2.setVoisinGauche(joueur1);
+
+        //When
+        gameService.resoudreLesConflits(Age.I, joueurs);
+
+        //Then
+        assertThat(joueur1.getJetonsMilitaires()).containsExactly(Age.I.nbPointVictoireMilitaire, Age.I.nbPointVictoireMilitaire);
+        assertThat(joueur2.getJetonsMilitaires()).containsExactly(Age.I.nbPointDefaiteMilitaire, Age.I.nbPointDefaiteMilitaire);
+        assertThat(joueur1.getScoreMilitaire()).isEqualTo(2);
+        assertThat(joueur2.getScoreMilitaire()).isEqualTo(-2);
     }
 }
