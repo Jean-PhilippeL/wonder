@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 public class ConstructionValidator {
 
     public static class Structure {
+        Action action;
         Joueur joueur;
         Map<Building, List<Resource>> ressourcesMap;
     }

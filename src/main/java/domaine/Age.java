@@ -12,11 +12,15 @@ public enum Age {
     public final int nbPointDefaiteMilitaire = -1;
     public final int nbPointVictoireMilitaire;
 
+    public final static Age lastAge = III;
+
     Age(SensRotation sensRotation, int nbPointVictoireMilitaire) {
        this.sensRotation = sensRotation;
         this.nbPointVictoireMilitaire = nbPointVictoireMilitaire;
     }
 
     public enum SensRotation {GAUCHE, DROITE}
+
+
 
 }

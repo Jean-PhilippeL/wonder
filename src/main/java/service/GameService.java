@@ -61,4 +61,14 @@ public class GameService {
         }
     }
 
+    public boolean isEndOfTheAge(List<Joueur> joueurs){
+        return Iterables.getLast(joueurs).getCartesEnMain().size() == 1;
+    }
+
+    public void defausserDerniereCarte(List<Joueur> joueurs, List<Building> defausse) {
+        for(Joueur joueur : joueurs){
+            defausse.add(joueur.defausserFinDeTour());
+        }
+    }
+
 }

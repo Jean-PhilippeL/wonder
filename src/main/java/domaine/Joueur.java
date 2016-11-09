@@ -1,5 +1,7 @@
 package domaine;
 
+import com.google.common.collect.Iterables;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -38,14 +40,14 @@ public class Joueur {
     }
 
     public int getScoreMilitaire() {
-        return jetonsMilitaires.stream().reduce((j1,j2) ->j1+j2).orElse(0);
+        return jetonsMilitaires.stream().reduce((j1, j2) -> j1 + j2).orElse(0);
     }
 
     public void ajouterCarteEnMain(Building building) {
         cartesEnMain.add(building);
     }
 
-    public void ajouterJetonMilitaire(Integer jeton){
+    public void ajouterJetonMilitaire(Integer jeton) {
         jetonsMilitaires.add(jeton);
     }
 
@@ -58,7 +60,7 @@ public class Joueur {
     }
 
     public int getNombreDeBoucliers() {
-        return cartesConstruites.stream().map(c -> c.getBoucliersMilitaires()).reduce((b1,b2) -> b1+b2).orElse(0);
+        return cartesConstruites.stream().map(c -> c.getBoucliersMilitaires()).reduce((b1, b2) -> b1 + b2).orElse(0);
     }
 
 
@@ -78,15 +80,15 @@ public class Joueur {
 
     public void construire(Building building) {
         //if (cartesEnMain.remove(building)) { //Todo : à vérifier en amont
-            final int coutConstruction = building.getCoutPiecesOr();
-            if (coutConstruction > nombreDePièces) {
-                throw new RuntimeException("Pas assez d'argent pour construire"); //Déja vérifié avant
-            }
-            nombreDePièces -= coutConstruction;
-            building.construit(this);
-            cartesConstruites.add(building);
+        final int coutConstruction = building.getCoutPiecesOr();
+        if (coutConstruction > nombreDePièces) {
+            throw new RuntimeException("Pas assez d'argent pour construire"); //Déja vérifié avant
+        }
+        nombreDePièces -= coutConstruction;
+        building.construit(this);
+        cartesConstruites.add(building);
         //} else {
-          //  throw new RuntimeException("can't construct this building");
+        //  throw new RuntimeException("can't construct this building");
         //}
     }
 
@@ -107,6 +109,15 @@ public class Joueur {
         } else {
             throw new RuntimeException("can't defausser this building");
         }
+    }
+
+    public Building defausserFinDeTour() {
+        if (cartesEnMain.size() != 1) {
+            throw new RuntimeException("il ne devrait y avoir qu'une seule carte à cette étape");
+        }
+        Building lastCard = Iterables.getLast(cartesEnMain);
+        cartesEnMain.remove(lastCard);
+        return lastCard;
     }
 
     public void construireMerveille(Building building) {
