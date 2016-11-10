@@ -32,12 +32,12 @@ public class GameManager {
     }
 
 
-    public void startGame(List<Joueur> joueurs){
+    public void startGame(List<String> joueurNames){
         if(!joueurs.isEmpty()){
             throw new RuntimeException("Game already started");
         }
 
-        this.joueurs.addAll(joueurs);
+        joueurNames.forEach(name -> this.joueurs.add(Joueur.builder().setName(name).build()));
         gameService.initialiserPlaces(joueurs);
         gameService.distribuerCartes(Age.I, joueurs);
 
