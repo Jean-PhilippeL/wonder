@@ -73,4 +73,7 @@ public class GameManager {
         }
     }
 
+    public List<Joueur> getStatus() {
+        return joueurs;
+    }
 }

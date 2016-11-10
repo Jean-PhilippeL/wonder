@@ -13,18 +13,13 @@ import java.util.function.Consumer;
  */
 public class Building {
 
-
     private final String name;
-
-
     private final Age age;
     private final Couleur couleur;
     private final List<Resource> coutRessources;
     private final int coutPiecesOr;
     private final List<Resource> production;
     private final List<Resource> productionChoisie;
-
-
     private final int boucliersMilitaires;
     private final int nombrePointsVictoire;
     private final SymboleScience symboleScience;

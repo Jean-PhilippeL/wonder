@@ -1,7 +1,13 @@
 package domaine;
 
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonSerializer;
+import com.fasterxml.jackson.databind.SerializerProvider;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.google.common.collect.Iterables;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -19,13 +25,20 @@ public class Joueur {
     private final List<Integer> jetonsMilitaires;
     private int nombreDePièces;
 
+
+    @JsonSerialize(using = JoueurVoisinSerializer.class )
     private Joueur voisinGauche;
+
+    @JsonSerialize(using = JoueurVoisinSerializer.class )
     private Joueur voisinDroite;
 
     public static JoueurBuilder builder() {
         return new JoueurBuilder();
     }
 
+    public String getName() {
+        return name;
+    }
 
     public List<Building> getCartesEnMain() {
         return Collections.unmodifiableList(cartesEnMain);
@@ -180,4 +193,10 @@ public class Joueur {
         }
     }
 
+    private static class JoueurVoisinSerializer extends JsonSerializer<Joueur> {
+        @Override
+        public void serialize(Joueur joueur, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
+            jsonGenerator.writeString(joueur.getName());
+        }
+    }
 }

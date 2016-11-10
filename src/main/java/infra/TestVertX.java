@@ -5,6 +5,7 @@ import io.vertx.core.MultiMap;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerResponse;
+import io.vertx.core.json.Json;
 import io.vertx.ext.web.Router;
 import service.GameManager;
 import service.GameService;
@@ -29,7 +30,6 @@ public class TestVertX {
             HttpServerResponse response = routingContext.response();
             response.setChunked(true);
 
-
             MultiMap params = routingContext.request().params();
             final String joueurs = params.get("joueurs[]");
             if(Strings.isNullOrEmpty(joueurs)){
@@ -49,20 +49,34 @@ public class TestVertX {
                         response.write("jeu déjà créé\n");
                     }
                 }
-
-
-
-
             }
-
-
-
-
-
-
 
             routingContext.next();
         });
+
+        router.route().path("/status").handler(routingContext -> {
+
+            HttpServerResponse response = routingContext.response();
+            response.setChunked(false);
+
+
+                    if(gameManager == null){
+                        response.end("pas de partie en cours\n");
+                    }else {
+
+                        response.end(Json.encodePrettily(gameManager.getStatus()));
+
+                    }
+
+
+
+
+        });
+
+
+
+
+
 
         router.route().handler(routingContext -> {
 
