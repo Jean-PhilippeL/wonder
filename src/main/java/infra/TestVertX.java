@@ -1,6 +1,8 @@
 package infra;
 
+import api.GameRepresentation;
 import com.google.common.base.Strings;
+import domaine.Joueur;
 import io.vertx.core.MultiMap;
 import io.vertx.core.Vertx;
 import io.vertx.core.http.HttpServer;
@@ -11,6 +13,8 @@ import service.GameManager;
 import service.GameService;
 
 import java.util.Arrays;
+import java.util.List;
+import java.util.stream.Collectors;
 
 /**
  * Created by jean_letard on 10/11/2016.
@@ -18,6 +22,7 @@ import java.util.Arrays;
 public class TestVertX {
 
     public static GameManager gameManager = null;
+    final public static ApiAdapter apiAdapter = new ApiAdapter();
 
     public static void main(String[] args) {
 
@@ -51,32 +56,33 @@ public class TestVertX {
                 }
             }
 
-            routingContext.next();
+            response.end();
+
+        });
+
+        router.route().path("/joueurStatus").handler(routingContext -> {
+            HttpServerResponse response = routingContext.response();
+            MultiMap params = routingContext.request().params();
+            final String joueurName = params.get("joueur");
+            final List<Joueur> joueurs = gameManager.getJoueurs();
+            final Joueur joueur =  joueurs.stream().filter(j -> joueurName.equals(j.getName())).findFirst().get();
+            final List<Joueur> autresJoueurs =  joueurs.stream().filter(j -> !joueurName.equals(j.getName())).collect(Collectors.toList());
+            final GameRepresentation gameRepresentation = new GameRepresentation();
+            gameRepresentation.setMe(apiAdapter.toMyPlayerRepresentation(joueur));
+            gameRepresentation.setOthers(autresJoueurs.stream().map(j -> apiAdapter.toOtherPlayerRepresentation(j)).collect(Collectors.toList()));
+            gameRepresentation.setCurrentAge(gameManager.getCurrentAge().name());
+            response.end(Json.encodePrettily(gameRepresentation));
         });
 
         router.route().path("/status").handler(routingContext -> {
-
             HttpServerResponse response = routingContext.response();
             response.setChunked(false);
-
-
                     if(gameManager == null){
                         response.end("pas de partie en cours\n");
                     }else {
-
                         response.end(Json.encodePrettily(gameManager.getStatus()));
-
                     }
-
-
-
-
         });
-
-
-
-
-
 
         router.route().handler(routingContext -> {
 

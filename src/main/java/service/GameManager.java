@@ -4,10 +4,7 @@ import domaine.Age;
 import domaine.Building;
 import domaine.Joueur;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -18,6 +15,8 @@ public class GameManager {
     private final GameService gameService;
 
     private final List<Joueur> joueurs;
+
+
 
     private Age currentAge = Age.I;
 
@@ -44,6 +43,11 @@ public class GameManager {
 
     }
 
+    public List<Joueur> getJoueurs() {
+        return Collections.unmodifiableList(joueurs);
+    }
+
+
     public void setAction(ConstructionValidator.Structure structure) {
         actionsDesJoueurs.put(structure.joueur, structure);
     }
@@ -56,7 +60,6 @@ public class GameManager {
 
         if(getJoueursAttendus().isEmpty()){
             // Appliquer les actions
-
             if(gameService.isEndOfTheAge(joueurs)){
                 gameService.resoudreLesConflits(currentAge, joueurs);
 
@@ -72,6 +75,10 @@ public class GameManager {
         } else {
             // TODO en attente des joueurs...
         }
+    }
+
+    public Age getCurrentAge() {
+        return currentAge;
     }
 
     public List<Joueur> getStatus() {

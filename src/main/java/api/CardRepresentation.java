@@ -1,16 +1,17 @@
 package api;
 
-import domaine.Age;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.util.List;
 
 /**
  * Created by jean_letard on 15/11/2016.
  */
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class CardRepresentation {
 
     private String name;
-    private Age age;
+    private String age;
     private String color;
     private List<ResourceRepresentation> coutRessources;
     private int costGoldenPieces;
@@ -31,11 +32,11 @@ public class CardRepresentation {
         this.name = name;
     }
 
-    public Age getAge() {
+    public String getAge() {
         return age;
     }
 
-    public void setAge(Age age) {
+    public void setAge(String age) {
         this.age = age;
     }
 
