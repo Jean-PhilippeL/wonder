@@ -1,17 +1,16 @@
 package domaine;
 
-import service.Jeu;
-
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Consumer;
 
 /**
  * Created by jean_letard on 18/10/2016.
  */
 public class Building {
+
+
+    public static final List<Building> allCards = new ArrayList<>();
+
 
     private final String name;
     private final Age age;
@@ -71,7 +70,7 @@ public class Building {
         this.onConstructMethod = Optional.ofNullable(buildingBuilder.onConstrucMethod);
         this.parent = Optional.ofNullable(buildingBuilder.parent);
 
-        Jeu.allCards.add(this);
+        allCards.add(this);
     }
 
     public void construit(Joueur joueur) {

@@ -38,6 +38,7 @@ public class GameManager {
         }
 
         joueurNames.forEach(name -> this.joueurs.add(Joueur.builder().setName(name).build()));
+        gameService.createCards();
         gameService.initialiserPlaces(joueurs);
         gameService.distribuerCartes(Age.I, joueurs);
 

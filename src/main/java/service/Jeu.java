@@ -1,7 +1,5 @@
 package service;
 
-import domaine.Building;
-import domaine.Deck;
 import domaine.Joueur;
 
 import java.util.ArrayList;
@@ -9,12 +7,10 @@ import java.util.List;
 
 public class Jeu {
 
-    public static final List<Building> allCards = new ArrayList<>();
+
     public static final List<Joueur> allPlayers = new ArrayList<>();
 
     public static void main(String[] args) {
-        Deck.apothiquaire.getCouleur();
-
 
 
         Joueur joueur1 = Joueur.builder().build();

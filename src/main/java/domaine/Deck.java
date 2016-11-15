@@ -1,8 +1,9 @@
 package domaine;
 
 /**
- * Created by jean_letard on 19/10/2016.
+ * TODO : revoir la manière d'instancier les cartes... Enum ou autre, il faut qu'elles soient accessibles unitairement pour les tests
  */
+@Deprecated
 public interface Deck {
 
     Building filonDor = Building.builder("filonDor",Age.I, Building.Couleur.MARRON)
